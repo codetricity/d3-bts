@@ -1,3 +1,4 @@
-const svg = d3.select('body').append('svg')
+const svg = d3.select('svg')
   .attr('width', '600')
   .attr('height', '400');
+
