@@ -1,5 +1,5 @@
 const svg = d3.select('svg')
-  .attr('width', '600')
+  .attr('width', '800')
   .attr('height', '400');
 
 const buttons = d3.selectAll('input');
