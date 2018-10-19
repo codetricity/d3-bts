@@ -4,10 +4,20 @@ const svg = d3.select('svg')
 
 const buttons = d3.selectAll('input');
 
-buttons.on('change', function(d) {
-  let memberName = this.value;
-  showImage(memberName);
-})
+
+d3.csv('data/bts-profiles.csv').then((data) => {
+
+  buttons.on('change', function(d) {
+    let memberName = this.value;
+    showImage(memberName);
+    showData(memberName, data);
+  });
+});
+
+
+function showData(memberName, data) {
+  console.log(data);
+}
 
 function showImage(memberName) {
   let imageFile;
