@@ -17,8 +17,41 @@ function showImage(memberName) {
     imageFile = 'assets/kim-seokjin.png';
   }
 
-  svg.append('image')
-    .attr('xlink:href', imageFile)
+  /**
+   * As there is only a single image, there is an easier way
+   * to do this.  We are using the 6 step pattern for practice.
+   * it is longer to do it this way, but good practice for future 
+   * projects where there is a larger dataset
+   * 
+   *  1. select
+   *  2. data
+   *  3. exit
+   *  4. update
+   *  5. enter
+   *  6. append
+   */
+
+  const images = svg.selectAll('image')  // 1. select all images 
+    .data([imageFile]);  // 2. bind all images to data 
+  
+  images
+    .exit().remove();   // 3. exit and remove unused elements
+
+  images                // 4. update image elements on screen
+    .attr('xlink:href', d => d)
+    .attr('x', '0')
+    .attr('y', '100')
+    .attr('width', '150')
+    .attr('height', '150')
+    .attr('opacity', '0.1')
+    .transition()
+    .attr('x', '300')      // if there were multiple images, we'd need to update this
+    .attr('opacity', '1.0')
+    .duration(700);
+
+  images.enter()    // 5. enter and return images to print to screen (none)
+    .append('image')   // 6. append new images to screen (there are none)
+    .attr('xlink:href', d => d)
     .attr('x', '0')
     .attr('y', '100')
     .attr('width', '150')
