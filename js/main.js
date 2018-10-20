@@ -24,11 +24,25 @@ function showData(memberName, data) {
       var yPosition = 80;
       for (var memberInfo in element) {
         let memberValue = element[memberInfo];
+        let styleClass;
+        if (memberInfo == 'name') {
+          styleClass = 'nameStyle';
+        } else {
+          styleClass = 'mainStyle';
+        }
+
         profileListing
           .append('text')
-          .attr('x', '50')
+          .attr('x', '800')
+          .attr('class', styleClass)
+          .text(`${memberInfo}:  ${memberValue}`)
+          .attr('y', '0')
+          .attr('fill-opacity', '0')
+          .transition()
           .attr('y', yPosition)
-          .text(`${memberInfo}:  ${memberValue}`);
+          .attr('fill-opacity', '1')
+          .attr('x', '50')
+          .duration(1000);
         yPosition += 50;
       }
     }
