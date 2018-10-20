@@ -2,6 +2,8 @@ const svg = d3.select('svg')
   .attr('width', '800')
   .attr('height', '400');
 
+const profileListing = svg.append('g');
+
 const buttons = d3.selectAll('input');
 
 
@@ -16,14 +18,28 @@ d3.csv('data/bts-profiles.csv').then((data) => {
 
 
 function showData(memberName, data) {
-  console.log(data);
+  profileListing.selectAll('text').remove();
+  data.forEach((element) => {
+    if (element.name == memberName) {
+      var yPosition = 80;
+      for (var memberInfo in element) {
+        let memberValue = element[memberInfo];
+        profileListing
+          .append('text')
+          .attr('x', '50')
+          .attr('y', yPosition)
+          .text(`${memberInfo}:  ${memberValue}`);
+        yPosition += 50;
+      }
+    }
+  });
 }
 
 function showImage(memberName) {
   let imageFile;
-  if (memberName == "kim namjoon") {
+  if (memberName == "Kim Namjoon") {
     imageFile = 'assets/kim-namjoon-150x150-circle.png';
-  } else if (memberName == 'kim seokjin') {
+  } else if (memberName == 'Kim Seokjin') {
     imageFile = 'assets/kim-seokjin.png';
   }
 
