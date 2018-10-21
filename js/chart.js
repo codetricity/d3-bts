@@ -19,11 +19,16 @@ const svgChart = d3.select('#chart')
     yScale = d3.scaleLinear()
       .domain(d3.extent(data, d => d.height))
       .range([chartHeight, 0]);
+
     xAxis = d3.axisBottom(xScale);
+    yAxis = d3.axisLeft(yScale);
 
     svgChart.append('g')
       .call(xAxis)
       .attr('transform', `translate(0, ${chartHeight})`);
+
+    svgChart.append('g')
+      .call(yAxis);
 
     let images = svgChart.selectAll('image')
       .data(data);
