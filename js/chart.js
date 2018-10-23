@@ -13,12 +13,15 @@ const svgChart = d3.select('#chart')
 
 // read in data from file
 d3.csv('data/bts-profiles.csv').then(data => {
-
   statsButtons.on('change', function(d) {
     const statsSelection = this.value;
-    changeStats(statsSelection);
+    changeStats(statsSelection, data);
   });
+});
 
+function changeStats(selection, data) {
+
+  const chartTitle = document.getElementById('statsTitle');
 
   const memberList = []; 
   data.forEach(element => memberList.push(element.name));
@@ -27,18 +30,16 @@ d3.csv('data/bts-profiles.csv').then(data => {
     .range([0, chartWidth]);
   
   yScale = d3.scaleLinear()
-    .domain(d3.extent(data, d => d.height))
     .range([chartHeight, 0]);
 
   xAxis = d3.axisBottom(xScale);
-  yAxis = d3.axisLeft(yScale);
 
   svgChart.append('g')
     .call(xAxis)
-    .attr('transform', `translate(0, ${chartHeight})`);
+    .attr('transform', `translate(0, ${chartWidth})`);
 
   svgChart.append('g')
-    .call(yAxis);
+    .attr('id', '#yAxis')
 
   let images = svgChart.selectAll('image')
     .data(data);
@@ -68,16 +69,46 @@ d3.csv('data/bts-profiles.csv').then(data => {
       } else if (d.name == 'Park Jimin') {
         return 'assets/park-jimin-150x150-circle.png';
       }
-    })
+    });
+
+
+  if (selection == 'weight') {
+    chartTitle.innerHTML = ('Member Weight');
+    d3.selectAll('#yAxis').remove();
+    yScale
+     .domain(d3.extent(data, d => d.weight));
+      
+     yAxis = d3.axisLeft(yScale);
+
+     svgChart.append('g')
+       .attr('id', '#yAxis')
+       .call(yAxis);
+     images
+       .transition()
+       .attr('y', (d, i) => {
+         return yScale(d.weight) - 50;
+       })
+       .duration(1200); 
+  } else if (selection == 'height') {
+    d3.selectAll('#yAxis').remove();
+
+    chartTitle.innerHTML = ('Member Height');
+    yScale
+      .domain(d3.extent(data, d => d.height));
+
+  yAxis = d3.axisLeft(yScale);
+
+  svgChart.append('g')
+    .attr('id', '#yAxis')
+    .call(yAxis);
+  images
     .transition()
     .attr('y', (d, i) => {
       return yScale(d.height) - 50;
     })
     .duration(1200);
-  console.log(images);
+  }
 
-});
 
-function changeStats(selection) {
-  console.log(`button changed to ${selection}`);
+
 }
