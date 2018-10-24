@@ -38,9 +38,6 @@ function changeStats(selection, data) {
     .call(xAxis)
     .attr('transform', `translate(0, ${chartWidth})`);
 
-  svgChart.append('g')
-    .attr('id', '#yAxis')
-
   let images = svgChart.selectAll('image')
     .data(data);
 
@@ -74,15 +71,17 @@ function changeStats(selection, data) {
 
   if (selection == 'weight') {
     chartTitle.innerHTML = ('Member Weight');
-    d3.selectAll('#yAxis').remove();
+    svgChart.selectAll('g').remove();
     yScale
      .domain(d3.extent(data, d => d.weight));
       
-     yAxis = d3.axisLeft(yScale);
+    yAxis = d3.axisLeft(yScale);
 
-     svgChart.append('g')
-       .attr('id', '#yAxis')
+    svgChart.append('g')
        .call(yAxis);
+    svgChart.append('g')
+       .call(xAxis)
+       .attr('transform', `translate(0, ${chartWidth})`);
      images
        .transition()
        .attr('y', (d, i) => {
@@ -90,25 +89,25 @@ function changeStats(selection, data) {
        })
        .duration(1200); 
   } else if (selection == 'height') {
-    d3.selectAll('#yAxis').remove();
+    svgChart.selectAll('g').remove();
 
     chartTitle.innerHTML = ('Member Height');
     yScale
       .domain(d3.extent(data, d => d.height));
 
-  yAxis = d3.axisLeft(yScale);
+    yAxis = d3.axisLeft(yScale);
 
-  svgChart.append('g')
-    .attr('id', '#yAxis')
-    .call(yAxis);
-  images
+    svgChart.append('g')
+      .call(yAxis);
+    svgChart.append('g')
+      .call(xAxis)
+      .attr('transform', `translate(0, ${chartWidth})`);
+
+    images
     .transition()
     .attr('y', (d, i) => {
       return yScale(d.height) - 50;
     })
     .duration(1200);
   }
-
-
-
 }
