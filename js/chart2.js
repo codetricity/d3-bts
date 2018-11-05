@@ -10,7 +10,6 @@ const svgChart = d3.select('#chart')
   .append('g')
   .attr('transform', `translate( ${margin.left}, ${margin.top} )`);
 
-
 // read in data from file
 d3.csv('data/bts-profiles.csv').then(data => {
 
@@ -20,15 +19,7 @@ d3.csv('data/bts-profiles.csv').then(data => {
   const weightScale = generateWeightScale(data);
   const weightAxis = d3.axisLeft(weightScale);
 
-  const yLabelHeight = chartHeight * 0.75;
-  const yLabelOffset = -60;
-  const yAxisLabel = svgChart.append('text')
-    .text('BTS')
-    .attr('x', yLabelOffset)
-    .attr('y', yLabelHeight)
-    .attr('transform', `rotate(-90, ${yLabelOffset}, ${yLabelHeight})`);
-
- 
+  const yAxisLabel = generateYaxisLabel(svgChart, chartHeight);
   
   const memberNames = [];
   data.forEach(eachMember => {
@@ -130,4 +121,14 @@ function getImageFile(d) {
     } else if (d.name == 'Park Jimin') {
       return 'assets/park-jimin-150x150-circle.png';
     }
+}
+
+function generateYaxisLabel(svgChart, chartHeight) {
+  const yLabelHeight = chartHeight * 0.75;
+  const yLabelOffset = -60;
+  const yAxisLabel = svgChart.append('text')
+    .attr('x', yLabelOffset)
+    .attr('y', yLabelHeight)
+    .attr('transform', `rotate(-90, ${yLabelOffset}, ${yLabelHeight})`);
+  return yAxisLabel;
 }
