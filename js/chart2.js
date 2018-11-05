@@ -13,17 +13,11 @@ const svgChart = d3.select('#chart')
 
 // read in data from file
 d3.csv('data/bts-profiles.csv').then(data => {
-  const heightMinMax = d3.extent(data, d => d.height);
-  const heightScale = d3.scaleLinear()
-    .domain(heightMinMax)
-    .range([chartHeight, 0]);
+
+  const heightScale = generateHeightScale(data);
   const heightAxis = d3.axisLeft(heightScale);
 
-
-  const weightMinMax = d3.extent(data, d => d.weight);
-  const weightScale = d3.scaleLinear()
-    .domain(weightMinMax)
-    .range([chartHeight, 0]);
+  const weightScale = generateWeightScale(data);
   const weightAxis = d3.axisLeft(weightScale);
 
   const yLabelHeight = chartHeight * 0.75;
@@ -50,12 +44,15 @@ d3.csv('data/bts-profiles.csv').then(data => {
     .call(xAxis)
     .attr('transform', `translate(0, ${chartHeight})`);
   
-  const datapoints = svgChart.selectAll('circle')
+  const imageSize = 60;
+  const datapoints = svgChart.selectAll('image')
     .data(data)
     .enter()
-    .append('circle')
-    .attr('cx', d => xScale(d.name))
-    .attr('r', '5');
+    .append('image')
+    .attr('x', d => xScale(d.name) - imageSize/2 + xScale.bandwidth() /2 )
+    .attr('xlink:href', d => getImageFile(d))
+    .attr('width', imageSize)
+    .attr('height', imageSize);
 
   const chartValues = {
     weight: weightAxis, 
@@ -64,7 +61,8 @@ d3.csv('data/bts-profiles.csv').then(data => {
     xScale: xScale,
     heightScale: heightScale,
     weightScale: weightScale,
-    datapoints: datapoints};
+    datapoints: datapoints,
+    imageSize: imageSize};
 
 
   statsButtons.on('change', function(d) {
@@ -83,12 +81,48 @@ function changeStats(selection, chartValues) {
       .call(chartValues.height);
     chartValues.label.text('BTS Member Height (cm)');
     chartValues.datapoints
-      .attr('cy', d => chartValues.heightScale(d.height));
+      .attr('y', d => chartValues.heightScale(d.height) - chartValues.imageSize/2);
   } else if (selection == 'weight') {
     yAxisContainer
       .call(chartValues.weight);
     chartValues.label.text('BTS Member Weight (lbs)');
     chartValues.datapoints
-      .attr('cy', d => chartValues.weightScale(d.weight));
+      .attr('y', d => chartValues.weightScale(d.weight) - chartValues.imageSize/2);
   }
+}
+
+function generateHeightScale(data) {
+  const heightMin = d3.min(data, d => d.height);
+  const heightMax = d3.max(data, d => d.height);
+  const heightScale = d3.scaleLinear()
+    .domain([heightMin - 1, heightMax])
+    .range([chartHeight, 0]);
+  return heightScale;
+}
+
+function generateWeightScale(data) {
+  const weightMin = d3.min(data, d => d.weight);
+  const weightMax = d3.max(data, d => d.weight);
+  const weightScale = d3.scaleLinear()
+    .domain([weightMin - 2, weightMax])
+    .range([chartHeight, 0]);
+  return weightScale;
+}
+
+function getImageFile(d) {
+    if (d.name == 'Kim Namjoon') {
+      return 'assets/kim-namjoon-150x150-circle.png';
+    } else if (d.name == 'Kim Seokjin') {
+      return 'assets/kim-seokjin.png';
+    } else if (d.name == 'Jung Hoseok') {
+      return 'assets/jung-hoseok-150x150-circle.png';
+    } else if (d.name == 'Jeon Jeong-guk') {
+      return 'assets/jungkook-150x150-circle.png';
+    } else if (d.name == 'Kim Taehyung') {
+      return 'assets/kim-taehyung-150x150.png';
+    } else if (d.name == 'Min Yoongi') {
+      return 'assets/min-yoongi.png';
+    } else if (d.name == 'Park Jimin') {
+      return 'assets/park-jimin-150x150-circle.png';
+    }
 }
