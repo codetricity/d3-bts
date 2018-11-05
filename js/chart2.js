@@ -21,10 +21,7 @@ d3.csv('data/bts-profiles.csv').then(data => {
 
   const yAxisLabel = generateYaxisLabel(svgChart, chartHeight);
   
-  const memberNames = [];
-  data.forEach(eachMember => {
-    memberNames.push(eachMember.name);
-  });
+  const memberNames = getMemberNames(data);
 
   const xScale = d3.scaleBand()
     .domain(memberNames)
@@ -131,4 +128,11 @@ function generateYaxisLabel(svgChart, chartHeight) {
     .attr('y', yLabelHeight)
     .attr('transform', `rotate(-90, ${yLabelOffset}, ${yLabelHeight})`);
   return yAxisLabel;
+}
+
+function getMemberNames(data) {
+  const memberNames = [];
+  data.forEach(eachMember => {
+    memberNames.push(eachMember.name);
+  });
 }
