@@ -22,7 +22,7 @@ d3.csv('data/bts-profiles.csv').then(data => {
   const yAxisLabel = generateYaxisLabel(svgChart, chartHeight);
   
   const memberNames = getMemberNames(data);
-
+  
   const xScale = d3.scaleBand()
     .domain(memberNames)
     .range([0, chartWidth]);
@@ -31,7 +31,7 @@ d3.csv('data/bts-profiles.csv').then(data => {
   svgChart.append('g')
     .call(xAxis)
     .attr('transform', `translate(0, ${chartHeight})`);
-  
+    
   const imageSize = 60;
   const datapoints = svgChart.selectAll('image')
     .data(data)
@@ -135,4 +135,19 @@ function getMemberNames(data) {
   data.forEach(eachMember => {
     memberNames.push(eachMember.name);
   });
+  return memberNames;
 }
+
+// not working
+// function getDatapoints(svgChart, data, xScale) {
+//   const imageSize = 60;
+//   const datapoints = svgChart.selectAll('image')
+//     .data(data)
+//     .enter()
+//     .append('image')
+//     .attr('x', d => xScale(d.name) - imageSize/2 + xScale.bandwidth() /2 )
+//     .attr('xlink:href', d => getImageFile(d))
+//     .attr('width', imageSize)
+//     .attr('height', imageSize);
+//   return datapoints;
+// }
