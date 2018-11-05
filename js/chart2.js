@@ -19,7 +19,7 @@ d3.csv('data/bts-profiles.csv').then(data => {
   const weightScale = generateWeightScale(data);
   const weightAxis = d3.axisLeft(weightScale);
 
-  const yAxisLabel = generateYaxisLabel(svgChart, chartHeight);
+  const yAxisLabel = generateYaxisLabel(chartHeight);
   
   const memberNames = getMemberNames(data);
   
@@ -34,8 +34,10 @@ d3.csv('data/bts-profiles.csv').then(data => {
     
   const imageSize = 60;
   const datapoints = svgChart.selectAll('image')
+  // const datapoints = getDatapoints(data, xScale);
+  // datapoints
     .data(data)
-    .enter()
+      .enter()
     .append('image')
     .attr('x', d => xScale(d.name) - imageSize/2 + xScale.bandwidth() /2 )
     .attr('xlink:href', d => getImageFile(d))
@@ -120,7 +122,7 @@ function getImageFile(d) {
     }
 }
 
-function generateYaxisLabel(svgChart, chartHeight) {
+function generateYaxisLabel(chartHeight) {
   const yLabelHeight = chartHeight * 0.75;
   const yLabelOffset = -60;
   const yAxisLabel = svgChart.append('text')
@@ -139,15 +141,16 @@ function getMemberNames(data) {
 }
 
 // not working
-// function getDatapoints(svgChart, data, xScale) {
-//   const imageSize = 60;
-//   const datapoints = svgChart.selectAll('image')
-//     .data(data)
+// trying to use global function
+function getDatapoints(data, xScale) {
+  const imageSize = 60;
+  const datapoints = svgChart.selectAll('image')
+    // .data(data)
 //     .enter()
 //     .append('image')
 //     .attr('x', d => xScale(d.name) - imageSize/2 + xScale.bandwidth() /2 )
 //     .attr('xlink:href', d => getImageFile(d))
 //     .attr('width', imageSize)
 //     .attr('height', imageSize);
-//   return datapoints;
-// }
+  return datapoints;
+}
