@@ -80,14 +80,19 @@ function changeStats(selection, chartValues) {
     yAxisContainer
       .call(chartValues.height);
     chartValues.label.text('BTS Member Height (cm)');
+    
     chartValues.datapoints
-      .attr('y', d => chartValues.heightScale(d.height) - chartValues.imageSize/2);
+      .transition()
+      .attr('y', d => chartValues.heightScale(d.height) - chartValues.imageSize/2)
+      .duration(800);
   } else if (selection == 'weight') {
     yAxisContainer
       .call(chartValues.weight);
     chartValues.label.text('BTS Member Weight (lbs)');
     chartValues.datapoints
-      .attr('y', d => chartValues.weightScale(d.weight) - chartValues.imageSize/2);
+      .transition()
+      .attr('y', d => chartValues.weightScale(d.weight) - chartValues.imageSize/2)
+      .duration(800);
   }
 }
 
