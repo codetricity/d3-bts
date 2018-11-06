@@ -13,11 +13,12 @@ const svgChart = d3.select('#chart')
 // read in data from file
 d3.csv('data/bts-profiles.csv').then(data => {
 
+  const chart = new BtsChart();
   const chartW = chartWidth;
-  const heightScale = generateHeightScale(data);
+  const heightScale = chart.generateHeightScale(data);
   const heightAxis = d3.axisLeft(heightScale);
 
-  const weightScale = generateWeightScale(data);
+  const weightScale = chart.generateWeightScale(data);
   const weightAxis = d3.axisLeft(weightScale);
 
   const yAxisLabel = generateYaxisLabel(chartHeight);

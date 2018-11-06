@@ -1,3 +1,22 @@
+function BtsChart() {
+  this.generateHeightScale = function(data) {
+    const heightMin = d3.min(data, d => d.height);
+    const heightMax = d3.max(data, d => d.height);
+    const heightScale = d3.scaleLinear()
+      .domain([heightMin - 1, heightMax])
+      .range([chartHeight, 0]);
+    return heightScale;
+  };
+
+  this.generateWeightScale = function(data) {
+    const weightMin = d3.min(data, d => d.weight);
+    const weightMax = d3.max(data, d => d.weight);
+    const weightScale = d3.scaleLinear()
+      .domain([weightMin - 2, weightMax])
+      .range([chartHeight, 0]);
+    return weightScale;
+  };
+}
 
 function changeStats(selection, chartValues) {
   console.log(selection);
@@ -24,23 +43,7 @@ function changeStats(selection, chartValues) {
   }
 }
 
-function generateHeightScale(data) {
-  const heightMin = d3.min(data, d => d.height);
-  const heightMax = d3.max(data, d => d.height);
-  const heightScale = d3.scaleLinear()
-    .domain([heightMin - 1, heightMax])
-    .range([chartHeight, 0]);
-  return heightScale;
-}
 
-function generateWeightScale(data) {
-  const weightMin = d3.min(data, d => d.weight);
-  const weightMax = d3.max(data, d => d.weight);
-  const weightScale = d3.scaleLinear()
-    .domain([weightMin - 2, weightMax])
-    .range([chartHeight, 0]);
-  return weightScale;
-}
 
 function getImageFile(d) {
     if (d.name == 'Kim Namjoon') {
