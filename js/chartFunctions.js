@@ -1,20 +1,28 @@
-function BtsChart(width, height) {
+function BtsChart(width, height, imageSize, id, data) {
   this.width = width;
   this.height = height;
+  this.margin = {left: 100, right: 50, top: 50, bottom: 50};
+  this.svg = d3.select(id)
+    .attr('width', this.width + this.margin.left + this.margin.right)
+    .attr('height', this.height + this.margin.top + this.margin.bottom)
+    .append('g')
+    .attr('transform', `translate( ${this.margin.left}, ${this.margin.top} )`);
+  this.data = data;
+  this.imageSize = imageSize;
 
 
-  this.generateHeightScale = function(data) {
-    const heightMin = d3.min(data, d => d.height);
-    const heightMax = d3.max(data, d => d.height);
+  this.generateHeightScale = () => {
+    const heightMin = d3.min(this.data, d => d.height);
+    const heightMax = d3.max(this.data, d => d.height);
     const heightScale = d3.scaleLinear()
       .domain([heightMin - 1, heightMax])
       .range([this.height, 0]);
     return heightScale;
   };
 
-  this.generateWeightScale = function(data) {
-    const weightMin = d3.min(data, d => d.weight);
-    const weightMax = d3.max(data, d => d.weight);
+  this.generateWeightScale = function() {
+    const weightMin = d3.min(this.data, d => d.weight);
+    const weightMax = d3.max(this.data, d => d.weight);
     const weightScale = d3.scaleLinear()
       .domain([weightMin - 2, weightMax])
       .range([this.height, 0]);
@@ -24,7 +32,7 @@ function BtsChart(width, height) {
   this.generateYaxisLabel = function() {
     const yLabelHeight = this.height * 0.75;
     const yLabelOffset = -60;
-    const yAxisLabel = svgChart.append('text')
+    const yAxisLabel = this.svg.append('text')
       .attr('x', yLabelOffset)
       .attr('y', yLabelHeight)
       .attr('transform', `rotate(-90, ${yLabelOffset}, ${yLabelHeight})`);
@@ -38,9 +46,9 @@ function BtsChart(width, height) {
     return xScale;
   };
 
-  this.getMemberNames = function(data) {
+  this.getMemberNames = function() {
     const memberNames = [];
-    data.forEach(eachMember => {
+    this.data.forEach(eachMember => {
       memberNames.push(eachMember.name);
     });
     return memberNames;
@@ -64,12 +72,21 @@ function BtsChart(width, height) {
       return 'assets/park-jimin-150x150-circle.png';
     }
   };
-  
+
+  // does not work. need to move xScale into constructor
+  // 
+  // this.datapoints = this.svg.selectAll('image')
+  // .data(this.data)
+  // .enter()
+  // .append('image')
+  // .attr('x', d => xScale(d.name) - this.imageSize/2 + xScale.bandwidth() /2 )
+  // .attr('xlink:href', d => this.getImageFile(d))
+  // .attr('width', this.imageSize)
+  // .attr('height', this.imageSize);
 
   this.changeStats = function(selection, chartValues) {
-    console.log(selection);
     d3.select('#yAxis').remove();
-    const yAxisContainer = svgChart.append('g')
+    const yAxisContainer = this.svg.append('g')
       .attr('id', 'yAxis');
     if (selection == 'height') {
       yAxisContainer
@@ -78,7 +95,7 @@ function BtsChart(width, height) {
       
       chartValues.datapoints
         .transition()
-        .attr('y', d => chartValues.heightScale(d.height) - chartValues.imageSize/2)
+        .attr('y', d => chartValues.heightScale(d.height) - this.imageSize/2)
         .duration(800);
     } else if (selection == 'weight') {
       yAxisContainer
@@ -86,7 +103,7 @@ function BtsChart(width, height) {
       chartValues.label.text('BTS Member Weight (lbs)');
       chartValues.datapoints
         .transition()
-        .attr('y', d => chartValues.weightScale(d.weight) - chartValues.imageSize/2)
+        .attr('y', d => chartValues.weightScale(d.weight) - this.imageSize/2)
         .duration(800);
     }
   };
