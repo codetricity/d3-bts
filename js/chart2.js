@@ -1,36 +1,32 @@
-const chartHeight = 300;
-const chartWidth = 600;
+const chart = new BtsChart(600, 300);
 const margin = {left: 100, right: 50, top: 50, bottom: 50};
 
 const statsButtons = d3.selectAll(".statsButton");
 
 const svgChart = d3.select('#chart')
-  .attr('width', 600 + margin.left + margin.right)
-  .attr('height', chartHeight + margin.top + margin.bottom)
+  .attr('width', chart.width + margin.left + margin.right)
+  .attr('height', chart.height + margin.top + margin.bottom)
   .append('g')
   .attr('transform', `translate( ${margin.left}, ${margin.top} )`);
 
 // read in data from file
 d3.csv('data/bts-profiles.csv').then(data => {
-
-  const chart = new BtsChart();
-  const chartW = chartWidth;
   const heightScale = chart.generateHeightScale(data);
   const heightAxis = d3.axisLeft(heightScale);
 
   const weightScale = chart.generateWeightScale(data);
   const weightAxis = d3.axisLeft(weightScale);
 
-  const yAxisLabel = generateYaxisLabel(chartHeight);
+  const yAxisLabel = chart.generateYaxisLabel();
   
-  const memberNames = getMemberNames(data);
+  const memberNames = chart.getMemberNames(data);
   
-  const xScale = generateXscale(memberNames, chartW);
+  const xScale = chart.generateXscale(memberNames);
   
   const xAxis = d3.axisBottom(xScale);
   svgChart.append('g')
     .call(xAxis)
-    .attr('transform', `translate(0, ${chartHeight})`);
+    .attr('transform', `translate(0, ${chart.height})`);
     
   const imageSize = 60;
   const datapoints = svgChart.selectAll('image')
@@ -38,7 +34,7 @@ d3.csv('data/bts-profiles.csv').then(data => {
     .enter()
     .append('image')
     .attr('x', d => xScale(d.name) - imageSize/2 + xScale.bandwidth() /2 )
-    .attr('xlink:href', d => getImageFile(d))
+    .attr('xlink:href', d => chart.getImageFile(d))
     .attr('width', imageSize)
     .attr('height', imageSize);
 
@@ -55,6 +51,6 @@ d3.csv('data/bts-profiles.csv').then(data => {
 
   statsButtons.on('change', function(d) {
     const statsSelection = this.value;
-    changeStats(statsSelection, chartValues);
+    chart.changeStats(statsSelection, chartValues);
   });
 });
