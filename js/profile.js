@@ -1,6 +1,6 @@
 const svg = d3.select('svg')
   .attr('width', '800')
-  .attr('height', '400');
+  .attr('height', '300');
 
 const profileListing = svg.append('g');
 
@@ -21,7 +21,7 @@ function showData(memberName, data) {
   profileListing.selectAll('text').remove();
   data.forEach((element) => {
     if (element.name == memberName) {
-      var yPosition = 80;
+      var yPosition = 50;
       for (var memberInfo in element) {
         let memberValue = element[memberInfo];
         profileListing
@@ -66,7 +66,7 @@ function showImage(memberName) {
   images                // 4. update image elements on screen
     .attr('xlink:href', d => d)
     .attr('x', '0')
-    .attr('y', '100')
+    .attr('y', '50')
     .attr('width', '150')
     .attr('height', '150')
     .attr('opacity', '0.1')
@@ -79,7 +79,7 @@ function showImage(memberName) {
     .append('image')   // 6. append new images to screen (there are none)
     .attr('xlink:href', d => d)
     .attr('x', '0')
-    .attr('y', '100')
+    .attr('y', '50')
     .attr('width', '150')
     .attr('height', '150')
     .attr('opacity', '0.1')
