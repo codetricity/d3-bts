@@ -10,7 +10,6 @@ function BtsChart(width, height, imageSize, id, data) {
   this.data = data;
   this.imageSize = imageSize;
 
-
   this.generateHeightScale = () => {
     const heightMin = d3.min(this.data, d => d.height);
     const heightMax = d3.max(this.data, d => d.height);
@@ -20,6 +19,8 @@ function BtsChart(width, height, imageSize, id, data) {
     return heightScale;
   };
 
+  this.heightScale = this.generateHeightScale();
+
   this.generateWeightScale = function() {
     const weightMin = d3.min(this.data, d => d.weight);
     const weightMax = d3.max(this.data, d => d.weight);
@@ -28,6 +29,8 @@ function BtsChart(width, height, imageSize, id, data) {
       .range([this.height, 0]);
     return weightScale;
   };
+
+  this.weightScale = this.generateWeightScale();
 
   this.generateYaxisLabel = function() {
     const yLabelHeight = this.height * 0.75;
@@ -39,13 +42,6 @@ function BtsChart(width, height, imageSize, id, data) {
     return yAxisLabel;
   };
 
-  this.generateXscale = function(memberNames) {
-    const xScale = d3.scaleBand()
-      .domain(memberNames)
-      .range([0, this.width]);
-    return xScale;
-  };
-
   this.getMemberNames = function() {
     const memberNames = [];
     this.data.forEach(eachMember => {
@@ -54,6 +50,16 @@ function BtsChart(width, height, imageSize, id, data) {
     return memberNames;
   };
 
+  this.memberNames = this.getMemberNames();
+
+  this.generateXscale = function() {
+    const xScale = d3.scaleBand()
+      .domain(this.memberNames)
+      .range([0, this.width]);
+    return xScale;
+  };
+
+  this.xScale = this.generateXscale();
 
   this.getImageFile = function(d) {
     if (d.name == 'Kim Namjoon') {
@@ -73,16 +79,15 @@ function BtsChart(width, height, imageSize, id, data) {
     }
   };
 
-  // does not work. need to move xScale into constructor
-  // 
-  // this.datapoints = this.svg.selectAll('image')
-  // .data(this.data)
-  // .enter()
-  // .append('image')
-  // .attr('x', d => xScale(d.name) - this.imageSize/2 + xScale.bandwidth() /2 )
-  // .attr('xlink:href', d => this.getImageFile(d))
-  // .attr('width', this.imageSize)
-  // .attr('height', this.imageSize);
+ 
+  this.datapoints = this.svg.selectAll('image')
+    .data(this.data)
+    .enter()
+    .append('image')
+    .attr('x', d => this.xScale(d.name) - this.imageSize/2 + this.xScale.bandwidth() /2 )
+    .attr('xlink:href', d => this.getImageFile(d))
+    .attr('width', this.imageSize)
+    .attr('height', this.imageSize);
 
   this.changeStats = function(selection, chartValues) {
     d3.select('#yAxis').remove();
@@ -93,17 +98,17 @@ function BtsChart(width, height, imageSize, id, data) {
         .call(chartValues.height);
       chartValues.label.text('BTS Member Height (cm)');
       
-      chartValues.datapoints
+      this.datapoints
         .transition()
-        .attr('y', d => chartValues.heightScale(d.height) - this.imageSize/2)
+        .attr('y', d => this.heightScale(d.height) - this.imageSize/2)
         .duration(800);
     } else if (selection == 'weight') {
       yAxisContainer
         .call(chartValues.weight);
       chartValues.label.text('BTS Member Weight (lbs)');
-      chartValues.datapoints
+      this.datapoints
         .transition()
-        .attr('y', d => chartValues.weightScale(d.weight) - this.imageSize/2)
+        .attr('y', d => this.weightScale(d.weight) - this.imageSize/2)
         .duration(800);
     }
   };
