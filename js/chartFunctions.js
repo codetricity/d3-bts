@@ -1,21 +1,35 @@
 class BtsChart {
-  constructor(width, height, imageSize, id, data) {
-    this.width = width;
-    this.height = height;
-    this.margin = {left: 100, right: 50, top: 50, bottom: 50};
-    this.svg = d3.select(id)
-      .attr('width', this.width + this.margin.left + this.margin.right)
-      .attr('height', this.height + this.margin.top + this.margin.bottom)
-      .append('g')
-      .attr('transform', `translate( ${this.margin.left}, ${this.margin.top} )`);
+  constructor(chartSettings, data) {
+    this.width = chartSettings.width;
+    this.height = chartSettings.height;
+    this.imageSize = chartSettings.imageSize;
+    this.idHtml = chartSettings.idHtml;
     this.data = data;
-    this.imageSize = imageSize;
+    this.margin = chartSettings.margin;
+    this.svg = this.generateSvg();
+
     this.heightScale = this.generateHeightScale();
     this.weightScale = this.generateWeightScale();
     this.memberNames = this.getMemberNames();
     this.xScale = this.generateXscale();
+    this.createXaxis();
+    this.heightAxis = d3.axisLeft(this.heightScale);
+    this.weightAxis = d3.axisLeft(this.weightScale);
+    this.yAxisLabel = this.generateYaxisLabel();
+    this.datapoints = this.generateDatapoints();
+  }
 
-    this.datapoints = this.svg.selectAll('image')
+  generateSvg() {
+    const svg = d3.select(this.idHtml)
+      .attr('width', this.width + this.margin.left + this.margin.right)
+      .attr('height', this.height + this.margin.top + this.margin.bottom)
+      .append('g')
+      .attr('transform', `translate( ${this.margin.left}, ${this.margin.top} )`);
+    return svg;
+  }
+
+  generateDatapoints() {
+    const datapoints = this.svg.selectAll('image')
       .data(this.data)
       .enter()
       .append('image')
@@ -23,6 +37,14 @@ class BtsChart {
       .attr('xlink:href', d => this.getImageFile(d))
       .attr('width', this.imageSize)
       .attr('height', this.imageSize);
+    return datapoints;
+  }
+
+  createXaxis() {
+    const xAxis = d3.axisBottom(this.xScale);
+    this.svg.append('g')
+    .call(xAxis)
+    .attr('transform', `translate(0, ${this.height})`);
   }
 
   generateHeightScale() {
@@ -89,14 +111,14 @@ class BtsChart {
   }
 
 
-  changeStats(selection, chartValues) {
+  changeStats(selection) {
     d3.select('#yAxis').remove();
     const yAxisContainer = this.svg.append('g')
       .attr('id', 'yAxis');
     if (selection == 'height') {
       yAxisContainer
-        .call(chartValues.height);
-      chartValues.label.text('BTS Member Height (cm)');
+        .call(this.heightAxis);
+      this.yAxisLabel.text('BTS Member Height (cm)');
       
       this.datapoints
         .transition()
@@ -104,8 +126,8 @@ class BtsChart {
         .duration(800);
     } else if (selection == 'weight') {
       yAxisContainer
-        .call(chartValues.weight);
-      chartValues.label.text('BTS Member Weight (lbs)');
+        .call(this.weightAxis);
+      this.yAxisLabel.text('BTS Member Weight (lbs)');
       this.datapoints
         .transition()
         .attr('y', d => this.weightScale(d.weight) - this.imageSize/2)
