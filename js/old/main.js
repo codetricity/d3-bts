@@ -1,10 +1,10 @@
-const svg = d3.select('#profile')
+const svg = d3.select('svg')
   .attr('width', '800')
   .attr('height', '300');
 
 const profileListing = svg.append('g');
 
-const buttons = d3.selectAll('input');
+const buttons = d3.selectAll('.memberButtons');
 
 
 d3.csv('data/bts-profiles.csv').then((data) => {
@@ -24,11 +24,25 @@ function showData(memberName, data) {
       var yPosition = 50;
       for (var memberInfo in element) {
         let memberValue = element[memberInfo];
+        let styleClass;
+        if (memberInfo == 'name') {
+          styleClass = 'nameStyle';
+        } else {
+          styleClass = 'mainStyle';
+        }
+
         profileListing
           .append('text')
-          .attr('x', '50')
+          .attr('x', '800')
+          .attr('class', styleClass)
+          .text(`${memberInfo}:  ${memberValue}`)
+          .attr('y', '0')
+          .attr('fill-opacity', '0')
+          .transition()
           .attr('y', yPosition)
-          .text(`${memberInfo}:  ${memberValue}`);
+          .attr('fill-opacity', '1')
+          .attr('x', '50')
+          .duration(1000);
         yPosition += 50;
       }
     }
@@ -36,22 +50,15 @@ function showData(memberName, data) {
 }
 
 function showImage(memberName) {
+
+  const yPos = 70;
+
   let imageFile;
   if (memberName == "Kim Namjoon") {
     imageFile = 'assets/kim-namjoon-150x150-circle.png';
   } else if (memberName == 'Kim Seokjin') {
     imageFile = 'assets/kim-seokjin.png';
-  } else if (memberName == 'Jung Hoseok') {
-    imageFile = 'assets/jung-hoseok-150x150-circle.png';
-  } else if (memberName == 'Jeon Jeong-guk') {
-    imageFile = 'assets/jeon-jeong-guk-150x150-circle.png';
-  } else if (memberName == 'Kim Taehyung') {
-    imageFile = 'assets/kim-taehyung-150x150.png';
-  } else if (memberName == 'Min Yoongi') {
-    imageFile = 'assets/min-yoongi.png';
-  } else if (memberName == 'Park Jimin') {
-    imageFile = 'assets/park-jimin-150x150-circle.png';
-  } 
+  }
 
   /**
    * As there is only a single image, there is an easier way
@@ -70,13 +77,14 @@ function showImage(memberName) {
   const images = svg.selectAll('image')  // 1. select all images 
     .data([imageFile]);  // 2. bind all images to data 
   
+  
   images
     .exit().remove();   // 3. exit and remove unused elements
 
   images                // 4. update image elements on screen
     .attr('xlink:href', d => d)
     .attr('x', '0')
-    .attr('y', '50')
+    .attr('y', yPos)
     .attr('width', '150')
     .attr('height', '150')
     .attr('opacity', '0.1')
@@ -89,7 +97,7 @@ function showImage(memberName) {
     .append('image')   // 6. append new images to screen (there are none)
     .attr('xlink:href', d => d)
     .attr('x', '0')
-    .attr('y', '50')
+    .attr('y', yPos)
     .attr('width', '150')
     .attr('height', '150')
     .attr('opacity', '0.1')
