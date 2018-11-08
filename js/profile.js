@@ -1,4 +1,4 @@
-const svg = d3.select('svg')
+const svg = d3.select('#profile')
   .attr('width', '800')
   .attr('height', '300');
 
