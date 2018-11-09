@@ -100,7 +100,7 @@ class BtsChart {
     } else if (d.name == 'Jung Hoseok') {
       return 'assets/jung-hoseok-150x150-circle.png';
     } else if (d.name == 'Jeon Jeong-guk') {
-      return 'assets/jungkook-150x150-circle.png';
+      return 'assets/jeon-jeong-guk-150x150-circle.png';
     } else if (d.name == 'Kim Taehyung') {
       return 'assets/kim-taehyung-150x150.png';
     } else if (d.name == 'Min Yoongi') {
