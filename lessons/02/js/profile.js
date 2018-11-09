@@ -7,7 +7,7 @@ const profileListing = svg.append('g');
 const buttons = d3.selectAll('input');
 
 d3.csv('data/bts-profiles.csv').then((data) => {
-  buttons.on('change', function(data) {
+  buttons.on('change', function() {
     const memberName = this.value;
     showData(memberName, data);
     showImage(memberName);
@@ -16,6 +16,9 @@ d3.csv('data/bts-profiles.csv').then((data) => {
 
 function showData(memberName, data) {
   profileListing.selectAll('text').remove();
+ data.forEach(element => {
+   console.log(element.name);
+ });
 
 }
 
