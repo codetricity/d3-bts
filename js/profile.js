@@ -67,34 +67,30 @@ function showImage(memberName) {
    *  6. append
    */
 
-  const images = svg.selectAll('image')  // 1. select all images 
-    .data([imageFile]);  // 2. bind all images to data 
   
-  images
-    .exit().remove();   // 3. exit and remove unused elements
+  const images = svg.selectAll('image')  // step 1: select
+    .data([imageFile]); // step 2: data
+  images.exit().remove(); // step 3: exit
 
-  images                // 4. update image elements on screen
-    .attr('xlink:href', d => d)
-    .attr('x', '0')
-    .attr('y', '50')
-    .attr('width', '150')
-    .attr('height', '150')
+  images  // step 4: update
+    .attr('xlink:href', d => d) // you could use imageFile here
+    .attr('x', 0)
     .attr('opacity', '0.1')
     .transition()
-    .attr('x', '300')      // if there were multiple images, we'd need to update this
+    .attr('x', 300)
     .attr('opacity', '1.0')
-    .duration(700);
-
-  images.enter()    // 5. enter and return images to print to screen (none)
-    .append('image')   // 6. append new images to screen (there are none)
-    .attr('xlink:href', d => d)
+    .duration(800);
+  
+  images.enter()  // step 5: enter
+    .append('image')   // step 6: append
+    .attr('xlink:href', d => d) // this is for practice. you can use imageFile
     .attr('x', '0')
     .attr('y', '50')
-    .attr('width', '150')
-    .attr('height', '150')
     .attr('opacity', '0.1')
+    .attr('height', '150')
+    .attr('width', '150')
     .transition()
     .attr('x', '300')
     .attr('opacity', '1.0')
-    .duration(700);
+    .duration(800);
 }

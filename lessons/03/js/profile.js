@@ -56,16 +56,24 @@ function showImage(memberName) {
   images.exit().remove(); // step 3: exit
 
   images  // step 4: update
-    .attr('xlink:href', d => d);
+    .attr('xlink:href', d => d) // you could use imageFile here
+    .attr('x', 0)
+    .attr('opacity', '0.1')
+    .transition()
+    .attr('x', 300)
+    .attr('opacity', '1.0')
+    .duration(800);
   
   images.enter()  // step 5: enter
     .append('image')   // step 6: append
-    .attr('xlink:href', d => d)
-    .attr('x', '300')
+    .attr('xlink:href', d => d) // this is for practice. you can use imageFile
+    .attr('x', '0')
     .attr('y', '50')
+    .attr('opacity', '0.1')
     .attr('height', '150')
-    .attr('width', '150');
-  
-  console.log(`Showing image for ${memberName}`);
- 
+    .attr('width', '150')
+    .transition()
+    .attr('x', '300')
+    .attr('opacity', '1.0')
+    .duration(800);
 }
