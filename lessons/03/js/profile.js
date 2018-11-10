@@ -34,5 +34,38 @@ function showData(memberName, data) {
 }
 
 function showImage(memberName) {
+  let imageFile;
+  if (memberName == "Kim Namjoon") {
+    imageFile = 'assets/kim-namjoon-150x150-circle.png';
+  } else if (memberName == 'Kim Seokjin') {
+    imageFile = 'assets/kim-seokjin.png';
+  } else if (memberName == 'Jung Hoseok') {
+    imageFile = 'assets/jung-hoseok-150x150-circle.png';
+  } else if (memberName == 'Jeon Jeong-guk') {
+    imageFile = 'assets/jeon-jeong-guk-150x150-circle.png';
+  } else if (memberName == 'Kim Taehyung') {
+    imageFile = 'assets/kim-taehyung-150x150.png';
+  } else if (memberName == 'Min Yoongi') {
+    imageFile = 'assets/min-yoongi.png';
+  } else if (memberName == 'Park Jimin') {
+    imageFile = 'assets/park-jimin-150x150-circle.png';
+  } 
+
+  const images = svg.selectAll('image')  // step 1: select
+    .data([imageFile]); // step 2: data
+  images.exit().remove(); // step 3: exit
+
+  images  // step 4: update
+    .attr('xlink:href', d => d);
+  
+  images.enter()  // step 5: enter
+    .append('image')   // step 6: append
+    .attr('xlink:href', d => d)
+    .attr('x', '300')
+    .attr('y', '50')
+    .attr('height', '150')
+    .attr('width', '150');
+  
   console.log(`Showing image for ${memberName}`);
+ 
 }
