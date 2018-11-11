@@ -6,17 +6,10 @@ class BtsChart {
     this.idHtml = chartSettings.idHtml;
     this.data = data;
     this.margin = chartSettings.margin;
-    this.svg = this.generateSvg();
 
-    this.heightScale = this.generateHeightScale();
-    this.weightScale = this.generateWeightScale();
-    this.memberNames = this.getMemberNames();
-    this.xScale = this.generateXscale();
-    this.createXaxis();
-    this.heightAxis = d3.axisLeft(this.heightScale);
-    this.weightAxis = d3.axisLeft(this.weightScale);
-    this.yAxisLabel = this.generateYaxisLabel();
+    this.svg = this.generateSvg();
     this.datapoints = this.generateDatapoints();
+    this.createXaxis();
   }
 
   generateSvg() {
@@ -47,7 +40,18 @@ class BtsChart {
     .attr('transform', `translate(0, ${this.height})`);
   }
 
-  generateHeightScale() {
+  // JavaScript Getter
+  get heightAxis() {
+    return d3.axisLeft(this.heightScale);
+  } 
+
+  // JavaScript Getter
+  get weightAxis() {
+    return d3.axisLeft(this.weightScale);
+  }
+
+  // JavaScript Getter
+  get heightScale() {
     const heightMin = d3.min(this.data, d => d.height);
     const heightMax = d3.max(this.data, d => d.height);
     const heightScale = d3.scaleLinear()
@@ -56,7 +60,8 @@ class BtsChart {
     return heightScale;
   }
 
-  generateWeightScale() {
+  // JavaScript Getter
+  get weightScale() {
     const weightMin = d3.min(this.data, d => d.weight);
     const weightMax = d3.max(this.data, d => d.weight);
     const weightScale = d3.scaleLinear()
@@ -65,17 +70,21 @@ class BtsChart {
     return weightScale;
   }
 
-  generateYaxisLabel() {
+  // JavaScript Getter
+  get yAxisLabel() {
+    d3.select('#yAxisLabel').remove();
     const yLabelHeight = this.height * 0.75;
     const yLabelOffset = -60;
     const yAxisLabel = this.svg.append('text')
       .attr('x', yLabelOffset)
       .attr('y', yLabelHeight)
-      .attr('transform', `rotate(-90, ${yLabelOffset}, ${yLabelHeight})`);
+      .attr('transform', `rotate(-90, ${yLabelOffset}, ${yLabelHeight})`)
+      .attr('id', 'yAxisLabel');
     return yAxisLabel;
   }
 
-  getMemberNames() {
+  // JavaScript Getter
+  get memberNames() {
     const memberNames = [];
     this.data.forEach(eachMember => {
       memberNames.push(eachMember.name);
@@ -84,7 +93,7 @@ class BtsChart {
   }
 
 
-  generateXscale() {
+  get xScale() {
     const xScale = d3.scaleBand()
       .domain(this.memberNames)
       .range([0, this.width]);
