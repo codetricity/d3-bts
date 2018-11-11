@@ -92,14 +92,13 @@ class BtsChart {
     return memberNames;
   }
 
-
+  // JavaScript Getter
   get xScale() {
     const xScale = d3.scaleBand()
       .domain(this.memberNames)
       .range([0, this.width]);
     return xScale;
   }
-
 
   getImageFile(d) {
     if (d.name == 'Kim Namjoon') {
