@@ -103,6 +103,19 @@ class BtsChart {
     return d3.axisLeft(this.weightScale);
   }
 
+  // JavaScript Getter
+  get yAxisLabel() {
+    d3.select('#yAxisLabel').remove();
+    const yLabelHeight = this.height * 0.75;
+    const yLabelOffset = -60;
+    const yAxisLabel = this.svg.append('text')
+      .attr('x', yLabelOffset)
+      .attr('y', yLabelHeight)
+      .attr('transform', `rotate(-90, ${yLabelOffset}, ${yLabelHeight})`)
+      .attr('id', 'yAxisLabel');
+    return yAxisLabel;
+  }
+
   changeStats(selection) {
     console.log(`changing stats to ${selection}`);
     d3.select('#yAxis').remove();
@@ -111,6 +124,23 @@ class BtsChart {
     if (selection == 'height') {
       yAxisContainer
         .call(this.heightAxis);
+      this.datapoints
+        .attr('y', '0')
+        .transition()
+        .attr('y', d => this.heightScale(d.height) - this.imageSize/2)
+        .duration(800);
+      this.yAxisLabel
+        .text('BTS Member Height (cm)');
+    } else if (selection == 'weight') {
+      yAxisContainer
+        .call(this.weightAxis);
+      this.datapoints
+        .attr('y', 0)
+        .transition()
+        .attr('y', d => this.weightScale(d.weight) - this.imageSize/2)
+        .duration(800);
+      this.yAxisLabel
+        .text('BTS Member Weight (lbs)');
     }
   }
 }
