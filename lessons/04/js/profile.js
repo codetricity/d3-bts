@@ -42,7 +42,7 @@ function showImage(memberName) {
   } else if (memberName == 'Jung Hoseok') {
     imageFile = 'assets/jung-hoseok-150x150-circle.png';
   } else if (memberName == 'Jeon Jeong-guk') {
-    imageFile = 'assets/jeon-jeong-guk-150x150-circle.png';
+    imageFile = 'assets/jungkook-150x150-circle.png';
   } else if (memberName == 'Kim Taehyung') {
     imageFile = 'assets/kim-taehyung-150x150.png';
   } else if (memberName == 'Min Yoongi') {
